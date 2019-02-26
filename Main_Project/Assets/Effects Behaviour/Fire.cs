@@ -6,7 +6,7 @@ public class Fire : MonoBehaviour
 {
     [SerializeField] private int damage = 10;
     private float damageTimer = 1f;
-    bool doingDamage = false;
+    private bool doingDamage = false;
 
     private void OnTriggerEnter(Collider collider)
     {

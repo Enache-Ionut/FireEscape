@@ -10,8 +10,10 @@ public class Person : MonoBehaviour
     [SerializeField] private double weight = 25.6;
     [SerializeField] private int age = 39;
     [SerializeField] private Emotions emotions;
+    [SerializeField] private Intelligence intelligence;
 
-    private enum Emotions { Neutral, Anger, Fear, Sad, Confident, Happy };
+    private enum Emotions { Neutral, Anger, Fear, Sad, Confident, Happy, Psychotic };
+    private enum Intelligence { AI_Nav, Smart, Average, Dumb };
     private ReadOnlyDictionary<string, float> speeds = new ReadOnlyDictionary<string, float>(new Dictionary<string, float>
     {
         {"Slow", 2.0f},
@@ -33,12 +35,11 @@ public class Person : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SetSpeedDependingOnHealth();
+        SetSpeedAndColorDependingOnHealth();
         MovePerson();
-        SetColorWhenHealthChanges(Color.red);
     }
 
-    private void SetSpeedDependingOnHealth()
+    private void SetSpeedAndColorDependingOnHealth()
     {
         switch (health)
         {
@@ -51,10 +52,12 @@ public class Person : MonoBehaviour
                 break;
 
             case int n when (n <= 70 && n > 0):
+                SetColorWhenHealthChanges(Color.yellow);
                 speed = speeds["Fast"];
                 break;
 
             case int n when (n <= 0):
+                SetColorWhenHealthChanges(Color.red);
                 speed = speeds["Stop"];
                 break;
         }
@@ -62,10 +65,7 @@ public class Person : MonoBehaviour
 
     private void SetColorWhenHealthChanges(Color color)
     {
-        if (health <= 0)
-        {
-            renderer.material.SetColor("_Color", color);
-        }
+            renderer.material.SetColor("_Color", color);    
     }
 
     private void MovePerson()
@@ -74,5 +74,35 @@ public class Person : MonoBehaviour
         moveDirection = transform.TransformDirection(moveDirection);
         moveDirection = moveDirection * speed;
         controller.Move(moveDirection * Time.deltaTime);
+    }
+
+    public void MoveForward()
+    {
+
+    }
+
+    public void MoveUp()
+    {
+
+    }
+
+    public void MoveDown()
+    {
+
+    }
+
+    public void MoveLeft()
+    {
+
+    }
+
+    public void MoveRight()
+    {
+
+    }
+
+    public void Rotate()
+    {
+
     }
 }

@@ -3,35 +3,39 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
-
-  //public Camera cam;
+  public Camera cam;
   public NavMeshAgent agent;
+
+  public Transform spawneePosition;
+  public GameObject obstacole;
 
   // Update is called once per frame
   private void Update()
   {
     if (Input.GetMouseButtonDown(0))
     {
-      var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-    //  Debug.Log("Update!!\n");
+      Ray ray = cam.ScreenPointToRay(Input.mousePosition);
       RaycastHit hit;
 
       if (Physics.Raycast(ray, out hit))
       {
-        NavMeshHit navmeshHit;
+        agent.SetDestination(hit.point);
+        Instantiate(obstacole, spawneePosition.position, spawneePosition.rotation);
 
-        int walkableMask = 1 << NavMesh.GetAreaFromName("Walkable");
-
-        if (NavMesh.SamplePosition(hit.point, out navmeshHit, 1.0f, walkableMask))
-        {
-          agent.SetDestination(navmeshHit.position);
-        }
-
-        // move the agent
-        //agent.SetDestination(hit.point);
-
+        DisableNaveMashObstacle("Obstacle");
       }
+    }
+  }
+
+
+  private void DisableNaveMashObstacle(string objectTag)
+  {
+    GameObject[] naveMeshObstacles = GameObject.FindGameObjectsWithTag(objectTag);
+    for (int i = 0; i < naveMeshObstacles.Length; i++)
+    {
+      //naveMeshObstacles[i].GetComponent<NavMeshObstacle>().carving = false;
+      //naveMeshObstacles[i].GetComponent<BoxCollider>().enabled = false;
+      naveMeshObstacles[i].GetComponent<MeshRenderer>().enabled = false;
     }
   }
 }

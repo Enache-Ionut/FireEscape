@@ -101,7 +101,12 @@ public class Person : MonoBehaviour
 
     }
 
-    public void Rotate()
+    public void RotateLeft()
+    {
+
+    }
+
+    public void RotateRight()
     {
 
     }

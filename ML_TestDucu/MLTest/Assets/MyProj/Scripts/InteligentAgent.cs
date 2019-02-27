@@ -15,12 +15,17 @@ public class InteligentAgent : Agent
     private RayPerception rayPer;
 
     private Vector3 originalPosition;
+
     private float punishment = -0.01f;
+    private float reward = 0.01f;
+
+    private Vector3 lastPosition;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        originalPosition = new Vector3(3, 0.6f, 0);
+        originalPosition = transform.position;
+        lastPosition = originalPosition;
     }
 
     public override void InitializeAgent()
@@ -33,18 +38,19 @@ public class InteligentAgent : Agent
 
     public void ResetAgent()
     {
-        punishment = -0.01f;
         System.Random r = new System.Random();
         this.transform.position = originalPosition;
+        lastPosition = originalPosition;
     }
 
     public override void CollectObservations()
     {
-        float rayDistance = 50f;
-        float[] rayAngles = { 20f, 90f, 160f, 45f, 135f, 70f, 110f };
-        string[] detectableObjects = { "Obstacle", "Goal", "Agent"};
-        AddVectorObs(rayPer.Perceive(rayDistance, rayAngles, detectableObjects, 0f, 0f));
+        //float rayDistance = 50f;
+        //float[] rayAngles = { 0f, 45f, 90f, 135f, 180f, 225f, 270f, 315f };
+        //string[] detectableObjects = { "Obstacle", "Goal", "Agent"};
+        //AddVectorObs(rayPer.Perceive(rayDistance, rayAngles, detectableObjects, 0f, 0f));
         AddVectorObs(this.transform.position);
+        //AddVectorObs(Vector2.Distance(this.transform.position, Goal.position));
     }
 
     public override void AgentAction(float[] vectorAction, string textAction)
@@ -55,17 +61,22 @@ public class InteligentAgent : Agent
         controlSignal.z = vectorAction[1];
         controller.Move(controlSignal * Time.deltaTime * speed);
 
-        AddReward(punishment*5);
+        var currDist = Vector3.Distance(transform.position, Goal.position);
+        var lastDist = Vector3.Distance(lastPosition, Goal.position);
+        lastPosition = transform.position;
+        /*
+        if (currDist < lastDist)
+        {
+            AddReward(reward);
+        }
+        */
+        AddReward(punishment);
 
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if (hit.gameObject.tag == "Obstacle")
-        {
-            AddReward(punishment * 5);
-        }
-        if (hit.gameObject.tag == "Agent")
         {
             AddReward(punishment * 5);
         }
@@ -77,7 +88,7 @@ public class InteligentAgent : Agent
 
     public void GoalAchieved()
     {
-        AddReward(100.0f);
+        AddReward(1000 * reward);
         Done();
         ResetAgent();
         StartCoroutine(GoalScoredSwapGroundMaterial(0.5f));

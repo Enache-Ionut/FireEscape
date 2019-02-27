@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
   public NavMeshAgent agent;
 
   public Transform spawneePosition;
-  public GameObject obstacole;
+  //public GameObject obstacole;
 
   public ThirdPersonCharacter character;
 
@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
       if (Physics.Raycast(ray, out hit))
       {
         agent.SetDestination(hit.point);
-        Instantiate(obstacole, spawneePosition.position, spawneePosition.rotation);
+       //Instantiate(obstacole, spawneePosition.position, spawneePosition.rotation);
 
         // DisableNaveMashObstacle("Obstacle");
       }

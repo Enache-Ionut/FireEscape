@@ -15,6 +15,10 @@ public class InteligentAgent : Agent
   private CharacterController controller;
   Material objMaterial;
   Renderer objRenderer;
+  public float zPoz;
+  private RayPerception rayPer;
+
+  private float punishment = -0.01f;
 
   void Start()
   {
@@ -23,24 +27,26 @@ public class InteligentAgent : Agent
   public override void InitializeAgent()
   {
     base.InitializeAgent();
-
-    objRenderer = GetComponent<Renderer>();
+        rayPer = GetComponent<RayPerception>();
+        objRenderer = GetComponent<Renderer>();
     objMaterial = objRenderer.material;
   }
 
   public override void AgentReset()
   {
+    punishment = -0.01f;
     System.Random r = new System.Random();
-    transform.position = new Vector3(3, 0.6f, r.Next(-4, 4));
-    Obstacle.position = new Vector3(r.Next(-2, 0), 0.5f, r.Next(-2, 2));
-    Obstacle.localScale = new Vector3(0.5f, 1, r.Next(3, 6));
+    transform.position = new Vector3(3, 0.6f, zPoz);
   }
+
   public override void CollectObservations()
   {
-    // Target and Agent positions
-    AddVectorObs(this.transform.position);
-    AddVectorObs(Goal.position);
-  }
+     float rayDistance = 50f;
+     float[] rayAngles = { 20f, 90f, 160f, 45f, 135f, 70f, 110f };
+     string[] detectableObjects = { "Obstacle", "Goal", "Agent"};
+     AddVectorObs(rayPer.Perceive(rayDistance, rayAngles, detectableObjects, 0f, 0f));
+     AddVectorObs(this.transform.position);
+    }
 
   public override void AgentAction(float[] vectorAction, string textAction)
   {
@@ -50,40 +56,36 @@ public class InteligentAgent : Agent
     controlSignal.z = vectorAction[1];
     controller.Move(controlSignal * Time.deltaTime * speed);
 
-    float distanceToTarget = Mathf.Abs(this.transform.position.x -
-                                              Goal.position.x);
+        AddReward(punishment);
 
-    if(distanceToTarget < 1)
-    {
-      this.GoalAchieved();
-    }
-    else
-    {
-      if (Vector3.Distance(this.transform.position, Obstacle.position) < 2)
-        AddReward(-0.02f);
-
-      if (Vector3.Distance(this.transform.position, Wall1.position) < 2)
-        AddReward(-0.02f);
-
-      if (Vector3.Distance(this.transform.position, Wall1.position) < 2)
-        AddReward(-0.02f);
-
-      if (Vector3.Distance(this.transform.position, Wall1.position) < 2)
-        AddReward(-0.02f);
-
-      AddReward(-0.01f);
-    }
   }
 
-  public void GoalAchieved()
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.gameObject.tag == "Obstacle")
+        {
+            AddReward(punishment * 50);
+        }
+        if (hit.gameObject.tag == "Agent")
+        {
+            AddReward(punishment * 5);
+        }
+        if (hit.gameObject.tag == "Goal")
+        {
+            GoalAchieved();
+        }
+    }
+
+    public void GoalAchieved()
   {
     System.Random r = new System.Random();
-    AddReward(5.0f);
+    AddReward(100.0f);
     transform.position = new Vector3(3, 0.6f, r.Next(-4, 4));
     Done();
 
     StartCoroutine(GoalScoredSwapGroundMaterial(0.5f));
   }
+
   IEnumerator GoalScoredSwapGroundMaterial(float time)
   {
     objRenderer.material.SetColor("_Color", Color.green);

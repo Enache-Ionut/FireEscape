@@ -28,6 +28,7 @@ TagManager:
   - Obstacle
   - Goal
   - Agent
+  - Academy
   layers:
   - Default
   - TransparentFX

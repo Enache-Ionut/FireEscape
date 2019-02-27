@@ -2,35 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fire : MonoBehaviour
+public class Fire : Effect
 {
-    [SerializeField] private int damage = 10;
-    private float damageTimer = 1f;
-    bool doingDamage = false;
+    [SerializeField] private float increaseSizeTimer = 1f;
+    private float maxScale = 10f;
 
-    private void OnTriggerEnter(Collider collider)
+    private void Start()
     {
-        Person person = collider.GetComponent<Person>();
-        doingDamage = true;
-
-        if (person != null)
-        {
-            StartCoroutine (DoDamage(damage, person));
-            
-        }
+        StartCoroutine(ScaleFire());
     }
 
-    private void OnTriggerExit(Collider other)
+    IEnumerator ScaleFire()
     {
-        doingDamage = false;
-    }
-
-    IEnumerator DoDamage(int damage, Person person)
-    {
-        while (doingDamage)
+        while (transform.transform.localScale.x < maxScale)
         {
-            person.health -= damage;
-            yield return new WaitForSeconds(damageTimer);
+            transform.localScale += new Vector3(1f, 1f, 1f);
+            yield return new WaitForSeconds(increaseSizeTimer);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
+using UnityStandardAssets.Characters.ThirdPerson;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,6 +9,15 @@ public class PlayerController : MonoBehaviour
 
   public Transform spawneePosition;
   public GameObject obstacole;
+
+  public ThirdPersonCharacter character;
+
+
+  void Start()
+  {
+    agent.updateRotation = false;
+  }
+
 
   // Update is called once per frame
   private void Update()
@@ -25,6 +35,16 @@ public class PlayerController : MonoBehaviour
         // DisableNaveMashObstacle("Obstacle");
       }
     }
+
+    if (agent.remainingDistance > agent.stoppingDistance)
+    {
+      character.Move(agent.desiredVelocity, false, false);
+    }
+    else
+    {
+      character.Move(Vector3.zero, false, false);
+    }
+
   }
 
 

@@ -2,6 +2,7 @@
 
 public class CameraController : MonoBehaviour
 {
+  public static Camera mainCamera;
   private const int cameraSpeed = 5;
   [SerializeField] private Camera[] cameras;
 

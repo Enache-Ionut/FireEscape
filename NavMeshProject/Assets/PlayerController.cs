@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
         agent.SetDestination(hit.point);
         Instantiate(obstacole, spawneePosition.position, spawneePosition.rotation);
 
-        DisableNaveMashObstacle("Obstacle");
+        // DisableNaveMashObstacle("Obstacle");
       }
     }
   }
@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
     GameObject[] naveMeshObstacles = GameObject.FindGameObjectsWithTag(objectTag);
     for (int i = 0; i < naveMeshObstacles.Length; i++)
     {
-      //naveMeshObstacles[i].GetComponent<NavMeshObstacle>().carving = false;
+      naveMeshObstacles[i].GetComponent<NavMeshObstacle>().carving = false;
       //naveMeshObstacles[i].GetComponent<BoxCollider>().enabled = false;
       naveMeshObstacles[i].GetComponent<MeshRenderer>().enabled = false;
     }

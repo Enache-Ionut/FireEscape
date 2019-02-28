@@ -16,16 +16,10 @@ public class InteligentAgent : Agent
 
     private Vector3 originalPosition;
 
-    private float punishment = -0.01f;
-    private float reward = 0.01f;
-
-    private Vector3 lastPosition;
-
     void Start()
     {
         controller = GetComponent<CharacterController>();
         originalPosition = transform.position;
-        lastPosition = originalPosition;
     }
 
     public override void InitializeAgent()
@@ -38,65 +32,67 @@ public class InteligentAgent : Agent
 
     public void ResetAgent()
     {
-        System.Random r = new System.Random();
-        this.transform.position = originalPosition;
-        lastPosition = originalPosition;
+        controller.Move(originalPosition - transform.position);
     }
 
     public override void CollectObservations()
     {
-        //float rayDistance = 50f;
-        //float[] rayAngles = { 0f, 45f, 90f, 135f, 180f, 225f, 270f, 315f };
-        //string[] detectableObjects = { "Obstacle", "Goal", "Agent"};
-        //AddVectorObs(rayPer.Perceive(rayDistance, rayAngles, detectableObjects, 0f, 0f));
         AddVectorObs(this.transform.position);
-        //AddVectorObs(Vector2.Distance(this.transform.position, Goal.position));
+        AddVectorObs(Goal.position);
     }
 
     public override void AgentAction(float[] vectorAction, string textAction)
     {
-        // Actions, size = 2
-        Vector3 controlSignal = Vector3.zero;
-        controlSignal.x = vectorAction[0];
-        controlSignal.z = vectorAction[1];
-        controller.Move(controlSignal * Time.deltaTime * speed);
+        Vector3 dirToGo = Vector3.zero;
+        Vector3 rotateDir = Vector3.zero;
 
-        var currDist = Vector3.Distance(transform.position, Goal.position);
-        var lastDist = Vector3.Distance(lastPosition, Goal.position);
-        lastPosition = transform.position;
-        /*
-        if (currDist < lastDist)
-        {
-            AddReward(reward);
-        }
-        */
-        AddReward(punishment);
+        int action = Mathf.FloorToInt(vectorAction[0]);
 
-    }
+        // Goalies and Strikers have slightly different action spaces.
+        if (action != 0)
+        {
+            switch (action)
+            {
+                case 1:
+                    dirToGo = transform.forward * 1f;
+                    break;
+                case 2:
+                    dirToGo = transform.forward * -1f;
+                    break;
+                case 3:
+                    dirToGo = transform.right * -1f;
+                    break;
+                case 4:
+                    dirToGo = transform.right * 1f;
+                    break;
+                
+            }
+            //transform.Rotate(rotateDir, 5f);
+            controller.Move(dirToGo * Time.deltaTime * speed);
+        }
 
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (hit.gameObject.tag == "Obstacle")
+        if (Vector3.Distance(Goal.position, this.transform.position) < 2.5)
         {
-            AddReward(punishment * 5);
+            this.GoalAchieved();
         }
-        if (hit.gameObject.tag == "Goal")
-        {
-            GoalAchieved();
-        }
+
+        AddReward(-0.01f);
+
     }
 
     public void GoalAchieved()
     {
-        AddReward(1000 * reward);
-        Done();
+        System.Random r = new System.Random();
+        AddReward(5.0f);
         ResetAgent();
-        StartCoroutine(GoalScoredSwapGroundMaterial(0.5f));
+        Done();
+
+        StartCoroutine(GoalScoredSwapGroundMaterial(0.5f, Color.green));
     }
 
-    IEnumerator GoalScoredSwapGroundMaterial(float time)
+    IEnumerator GoalScoredSwapGroundMaterial(float time, Color color)
     {
-        objRenderer.material.SetColor("_Color", Color.green);
+        objRenderer.material.SetColor("_Color", color);
         yield return new WaitForSeconds(time); // Wait for 2 sec
         objRenderer.material.SetColor("_Color", Color.red);
     }

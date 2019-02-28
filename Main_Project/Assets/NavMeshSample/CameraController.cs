@@ -6,9 +6,6 @@ public class CameraController : MonoBehaviour
   [SerializeField] private Camera[] cameras;
 
   public PlayerController playerController;
-  public GameObject[] camerasObjects;
-
-
 
   // Update is called once per frame
   private void Update()
@@ -50,10 +47,10 @@ public class CameraController : MonoBehaviour
 
   private void MoveCamera()
   {
-    //if ("MainCamera" == playerController.cam.tag)
-    //{
-    //  return;
-    //}
+    if ("MainCamera" == playerController.cam.tag)
+    {
+      return;
+    }
 
     if ("CameraTop" == playerController.cam.tag)
     {

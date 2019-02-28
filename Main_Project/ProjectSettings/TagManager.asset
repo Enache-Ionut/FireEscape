@@ -9,6 +9,7 @@ TagManager:
   - Camera45
   - Obstacle
   - CameraAll
+  - SpawnLocation
   layers:
   - Default
   - TransparentFX

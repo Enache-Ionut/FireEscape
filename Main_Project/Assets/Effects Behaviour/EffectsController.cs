@@ -35,13 +35,18 @@ public class EffectsController : MonoBehaviour
     List<Transform> spawnLocations;
     List<GameObject> smokes;
     List<GameObject> fires;
+    List<Transform> ocupiedLocation;
     Dictionary<GameObject, int> smokeStartTime;
 
     
     // Start is called before the first frame update
     void Start()
     {
-        // Initialize map
+        // Initialize
+        spawnLocations = new List<Transform>();
+        smokes = new List<GameObject>();
+        fires = new List<GameObject>();
+        ocupiedLocation = new List<Transform>();
         smokeStartTime = new Dictionary<GameObject, int>();
 
         // Get all spawn locations
@@ -61,6 +66,7 @@ public class EffectsController : MonoBehaviour
         GameObject smoke = Instantiate(effects[SMOKE], spawnLocations[rndIndex]);
         smokes.Add(smoke);
         smokeStartTime.Add(smoke, (int)Math.Round(Time.time));
+        ocupiedLocation.Add(spawnLocations[rndIndex]);
         fireStarted = true;
     }
 
@@ -92,19 +98,7 @@ public class EffectsController : MonoBehaviour
         if(elapsedTime % updateEvolveRate == 0 && updateEvolveTried == false)
         {
             updateEvolveTried = true;
-
-            foreach(var smoke in smokes)
-            {
-                int smokeStart = 0;
-                if(smokeStartTime.TryGetValue(smoke, out smokeStart))
-                {
-                    var smokeAge = (int)Math.Round(Time.time) - smokeStart;
-                    if (smokeAge >= evolveTimeMin)
-                    {
-                        TryEvolveSmoke(smoke);
-                    }
-                }
-            }
+            CheckRequirementsEvolve();
         }
         else
         {
@@ -118,11 +112,7 @@ public class EffectsController : MonoBehaviour
         if (elapsedTime % updateFireRate == 0 && updateFireTried == false)
         {
             updateFireTried = true;
-
-            foreach(var fire in fires)
-            {
-                TryTransmitFire(fire);
-            }
+            CheckRequirementsTransmit();            
         }
         else
         {
@@ -130,14 +120,66 @@ public class EffectsController : MonoBehaviour
         }
     }
 
-    void TryEvolveSmoke(GameObject smoke)
+    void CheckRequirementsEvolve()
     {
-
+        foreach (var smoke in smokes)
+        {
+            int smokeStart = 0;
+            if (smokeStartTime.TryGetValue(smoke, out smokeStart))
+            {
+                var smokeAge = (int)Math.Round(Time.time) - smokeStart;
+                if (smokeAge >= evolveTimeMin)
+                {
+                    TryEvolveSmoke(smoke);
+                }
+            }
+        }
     }
 
-    void TryTransmitFire(GameObject Fire)
+    void CheckRequirementsTransmit()
     {
+        foreach (var fire in fires)
+        {
+            List<Transform> freeLocationsInRange = new List<Transform>();
+            foreach (var location in spawnLocations)
+            {
+                if (Vector3.Distance(location.transform.position, fire.transform.position) < transmissionMaxDist)
+                {
+                    if (ocupiedLocation.Contains(location) == false)
+                    {
+                        freeLocationsInRange.Add(location);
+                    }
+                }
+            }
 
+            TryTransmitFire(fire, freeLocationsInRange);
+        }
+    }
+
+    void TryEvolveSmoke(GameObject smoke)
+    {
+        int percent = (int)Math.Round(evolveFireChance * 100);
+        System.Random rnd = new System.Random();
+        int chance = rnd.Next(0, 100);
+
+        if (chance < percent)
+        {
+            EvolveSmokeToFire(smoke);
+        }
+    }
+
+    void TryTransmitFire(GameObject fire, List<Transform> locationsInRange)
+    {
+        int percent = (int)Math.Round(evolveFireChance * 100);
+        System.Random rnd = new System.Random();
+        foreach (var location in locationsInRange)
+        {
+            int chance = rnd.Next(0, 100);
+            if (chance < percent)
+            {
+                EvolveSmokeToFire(fire);
+            }
+        }
     }
 
     void EvolveSmokeToFire(GameObject smoke)
@@ -155,6 +197,8 @@ public class EffectsController : MonoBehaviour
     {
         // Add smoke
         GameObject smoke = Instantiate(effects[SMOKE], nextSmokePosition);
+        smokeStartTime.Add(smoke, (int)Math.Round(Time.time));
+        ocupiedLocation.Add(smoke.transform);
         smokes.Add(smoke);
     }
 }

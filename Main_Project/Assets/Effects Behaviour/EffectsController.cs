@@ -7,8 +7,8 @@ public class EffectsController : MonoBehaviour
 {
     [SerializeField] GameObject[] effects;
     List<Transform> spawnLocations;
-    List<Transform> smokeLocations;
-    List<Transform> fireLocations;
+    List<GameObject> smokeLocations;
+    List<GameObject> fireLocations;
 
     public int updateFireRate = 5;
     public int updateEvolveRate = 10;
@@ -20,6 +20,9 @@ public class EffectsController : MonoBehaviour
     private float startTime;
     private float elapsedTime;
     private bool fireStarted = false;
+
+    private int SMOKE = 1;
+    private int FIRE = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -38,8 +41,8 @@ public class EffectsController : MonoBehaviour
     {
         System.Random rnd = new System.Random();
         int rndIndex = rnd.Next(0, spawnLocations.Count);
-        Instantiate(effects[1], spawnLocations[rndIndex]);
-        smokeLocations.Add(spawnLocations[rndIndex]);
+        GameObject smoke = Instantiate(effects[SMOKE], spawnLocations[rndIndex]);
+        smokeLocations.Add(smoke);
         fireStarted = true;
     }
 
@@ -65,5 +68,23 @@ public class EffectsController : MonoBehaviour
     void UpdateFires(int elapsedTime)
     {
 
+    }
+
+    void EvolveSmokeToFire(GameObject smoke)
+    {
+        // Add fire
+        GameObject fire = Instantiate(effects[FIRE], smoke.transform);
+        fireLocations.Add(fire);
+
+        // Remove smoke
+        smokeLocations.Remove(smoke);
+        Destroy(smoke);
+    }
+
+    void TransmitFire(Transform nextSmokePosition)
+    {
+        // Add smoke
+        GameObject smoke = Instantiate(effects[SMOKE], nextSmokePosition);
+        smokeLocations.Add(smoke);
     }
 }

@@ -11,6 +11,7 @@ TagManager:
   - CameraAll
   - SpawnLocation
   - Exit
+  - PlayerSpawnLocation
   layers:
   - Default
   - TransparentFX

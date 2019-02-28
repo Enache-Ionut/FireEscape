@@ -9,13 +9,12 @@ public class Status : MonoBehaviour
     [SerializeField] private TextMeshProUGUI aliveText;
     [SerializeField] private TextMeshProUGUI deadText;
     [SerializeField] private TextMeshProUGUI timeText;
-    [SerializeField] private TextMeshProUGUI freeText;
+
 
     private GameObject[] persons;
     private float currentTime = 0f;
     private int alive = 0;
     private int dead = 0;
-    private int free = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -58,11 +57,6 @@ public class Status : MonoBehaviour
             {
                 alive++;
             }
-
-            if (item.gameObject.GetComponent<Person>().free)
-            {
-                free++;
-            }
         }
 
         StringBuilder sb = new StringBuilder();
@@ -72,10 +66,5 @@ public class Status : MonoBehaviour
         sb.Clear();
         sb.Append("DEAD: ").Append(dead);
         deadText.text = sb.ToString();
-
-
-        sb.Clear();
-        sb.Append("FREE: ").Append(free);
-        freeText.text = sb.ToString();
     }
 }

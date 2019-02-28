@@ -16,14 +16,13 @@ public class PlayerController : MonoBehaviour
   private GameObject[] exits;
   private Transform closestGameObjectTransform;
 
-  void Start()
+  private void Start()
   {
     agent.updateRotation = false;
     exits = GameObject.FindGameObjectsWithTag("Exit");
   }
 
-
-  Transform GetClosestExit(Transform[] enemies)
+  private Transform GetClosestExit(Transform[] enemies)
   {
     Transform tMin = null;
     float minDist = Mathf.Infinity;
@@ -45,30 +44,25 @@ public class PlayerController : MonoBehaviour
   private void Update()
   {
 
-    if(waitCounter < 100)
+    if (waitCounter < 100)
     {
       ++waitCounter;
       return;
     }
 
 
-    //Transform[] exitsTrasnforms = exits.Select(exit => exit.GetComponent<Transform>()).ToArray();
-    //closestGameObjectTransform = GetClosestExit(exitsTrasnforms);
+    Transform[] exitsTrasnforms = exits.Select(exit => exit.GetComponent<Transform>()).ToArray();
+    closestGameObjectTransform = GetClosestExit(exitsTrasnforms);
 
 
+    Ray ray = cam.ScreenPointToRay(closestGameObjectTransform.localScale);
+    RaycastHit hit;
 
-
-    if (Input.GetMouseButtonDown(0))
+    if (Physics.Raycast(ray, out hit))
     {
-      Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-      RaycastHit hit;
-
-      if (Physics.Raycast(ray, out hit))
-      {
-        agent.SetDestination(hit.point);
-       //Instantiate(obstacole, spawneePosition.position, spawneePosition.rotation);
-        // DisableNaveMashObstacle("Obstacle");
-      }
+      agent.SetDestination(hit.point);
+      //Instantiate(obstacole, spawneePosition.position, spawneePosition.rotation);
+      // DisableNaveMashObstacle("Obstacle");
     }
 
     if (agent.remainingDistance > agent.stoppingDistance)

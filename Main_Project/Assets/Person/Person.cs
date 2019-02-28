@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
+using UnityStandardAssets.Characters.ThirdPerson;
 
 public class Person : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class Person : MonoBehaviour
     [SerializeField] private int age = 39;
     [SerializeField] private Emotions emotions;
     [SerializeField] private Intelligence intelligence;
+    [SerializeField] private GameObject body;
 
     private enum Emotions { Neutral, Anger, Fear, Sad, Confident, Happy, Psychotic };
     private enum Intelligence { AI_Nav, Smart, Average, Dumb };
@@ -24,19 +26,23 @@ public class Person : MonoBehaviour
     private CharacterController controller;
     private Vector3 moveDirection = new Vector3(0, 5, 0);
     private Renderer renderer;
+    private Animator animator;
+    private ThirdPersonCharacter thirdPersonCharacter;
 
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        renderer = GetComponent<Renderer>();
+        renderer = body.GetComponent<Renderer>();
+        animator = GetComponent<Animator>();
+        thirdPersonCharacter = GetComponent<ThirdPersonCharacter>();
     }
 
     // Update is called once per frame
     void Update()
     {
         SetSpeedAndColorDependingOnHealth();
-        MovePerson();
+        //MovePerson();
     }
 
     private void SetSpeedAndColorDependingOnHealth()
@@ -58,7 +64,8 @@ public class Person : MonoBehaviour
 
             case int n when (n <= 0):
                 SetColorWhenHealthChanges(Color.red);
-                speed = speeds["Stop"];
+                thirdPersonCharacter.m_MoveSpeedMultiplier = speeds["Stop"];
+                animator.enabled = false;
                 break;
         }
     }

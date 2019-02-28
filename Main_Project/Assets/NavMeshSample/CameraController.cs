@@ -2,7 +2,7 @@
 
 public class CameraController : MonoBehaviour
 {
-  private const int cameraSpeed = 5;
+  private const int cameraSpeed = 20;
   [SerializeField] private Camera[] cameras;
 
   public PlayerController playerController;

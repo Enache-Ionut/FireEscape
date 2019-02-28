@@ -5,17 +5,23 @@ using System;
 
 public class EffectsController : MonoBehaviour
 {
-    [SerializeField] GameObject[] effects;
-    List<Transform> spawnLocations;
-    List<GameObject> smokeLocations;
-    List<GameObject> fireLocations;
+    /*
+     * fireRate ,evolveRate, evolveTimeMin and startFireTime is measured in seconds 
+     * evolveChance and transmissionChance is measured in % expressed in [0, 1]
+     * transmissionMaxDist is measured in game units
+     */
 
     public int updateFireRate = 5;
     public int updateEvolveRate = 10;
+    public int evolveTimeMin = 10;
+    public int startFireTime = 3;
+
     public float evolveFireChance = 0.2f;
     public float transmissionChance = 0.1f;
     public float transmissionMaxDist = 5f;
-    public int startFireTime = 3;
+
+    private bool updateFireTried = false;
+    private bool updateEvolveTried = false;
 
     private float startTime;
     private float elapsedTime;
@@ -24,9 +30,20 @@ public class EffectsController : MonoBehaviour
     private int SMOKE = 1;
     private int FIRE = 0;
 
+
+    [SerializeField] GameObject[] effects;
+    List<Transform> spawnLocations;
+    List<GameObject> smokes;
+    List<GameObject> fires;
+    Dictionary<GameObject, int> smokeStartTime;
+
+    
     // Start is called before the first frame update
     void Start()
     {
+        // Initialize map
+        smokeStartTime = new Dictionary<GameObject, int>();
+
         // Get all spawn locations
         GameObject[] spawnLocationsGameObj = GameObject.FindGameObjectsWithTag("SpawnLocation");
         foreach (var spawnLocation in spawnLocationsGameObj)
@@ -42,7 +59,8 @@ public class EffectsController : MonoBehaviour
         System.Random rnd = new System.Random();
         int rndIndex = rnd.Next(0, spawnLocations.Count);
         GameObject smoke = Instantiate(effects[SMOKE], spawnLocations[rndIndex]);
-        smokeLocations.Add(smoke);
+        smokes.Add(smoke);
+        smokeStartTime.Add(smoke, (int)Math.Round(Time.time));
         fireStarted = true;
     }
 
@@ -67,6 +85,58 @@ public class EffectsController : MonoBehaviour
 
     void UpdateFires(int elapsedTime)
     {
+        /*
+        * updateEvolveTried is used to ensure that only 
+        * once a second evolve is tried
+        */ 
+        if(elapsedTime % updateEvolveRate == 0 && updateEvolveTried == false)
+        {
+            updateEvolveTried = true;
+
+            foreach(var smoke in smokes)
+            {
+                int smokeStart = 0;
+                if(smokeStartTime.TryGetValue(smoke, out smokeStart))
+                {
+                    var smokeAge = (int)Math.Round(Time.time) - smokeStart;
+                    if (smokeAge >= evolveTimeMin)
+                    {
+                        TryEvolveSmoke(smoke);
+                    }
+                }
+            }
+        }
+        else
+        {
+            updateEvolveTried = false;
+        }
+
+        /*
+        * updateFireTried is used to ensure that only 
+        * once a second evolve is tried
+        */
+        if (elapsedTime % updateFireRate == 0 && updateFireTried == false)
+        {
+            updateFireTried = true;
+
+            foreach(var fire in fires)
+            {
+                TryTransmitFire(fire);
+            }
+        }
+        else
+        {
+            updateFireTried = true;
+        }
+    }
+
+    void TryEvolveSmoke(GameObject smoke)
+    {
+
+    }
+
+    void TryTransmitFire(GameObject Fire)
+    {
 
     }
 
@@ -74,10 +144,10 @@ public class EffectsController : MonoBehaviour
     {
         // Add fire
         GameObject fire = Instantiate(effects[FIRE], smoke.transform);
-        fireLocations.Add(fire);
+        fires.Add(fire);
 
         // Remove smoke
-        smokeLocations.Remove(smoke);
+        smokes.Remove(smoke);
         Destroy(smoke);
     }
 
@@ -85,6 +155,6 @@ public class EffectsController : MonoBehaviour
     {
         // Add smoke
         GameObject smoke = Instantiate(effects[SMOKE], nextSmokePosition);
-        smokeLocations.Add(smoke);
+        smokes.Add(smoke);
     }
 }

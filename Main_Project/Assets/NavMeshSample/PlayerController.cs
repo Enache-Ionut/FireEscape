@@ -8,8 +8,6 @@ public class PlayerController : MonoBehaviour
   public NavMeshAgent agent;
 
   public Transform spawneePosition;
-  //public GameObject obstacole;
-
   public ThirdPersonCharacter character;
 
 
@@ -31,7 +29,6 @@ public class PlayerController : MonoBehaviour
       {
         agent.SetDestination(hit.point);
        //Instantiate(obstacole, spawneePosition.position, spawneePosition.rotation);
-
         // DisableNaveMashObstacle("Obstacle");
       }
     }

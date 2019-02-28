@@ -7,6 +7,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
 public class Person : MonoBehaviour
 {
     public int health = 100;
+    public bool free = false;
     [SerializeField] private float speed = 5.0f;
     [SerializeField] private double weight = 25.6;
     [SerializeField] private int age = 39;

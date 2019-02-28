@@ -9,11 +9,13 @@ public class Status : MonoBehaviour
     [SerializeField] private TextMeshProUGUI aliveText;
     [SerializeField] private TextMeshProUGUI deadText;
     [SerializeField] private TextMeshProUGUI timeText;
+    [SerializeField] private TextMeshProUGUI freeText;
 
     private GameObject[] persons;
     private float currentTime = 0f;
     private int alive = 0;
     private int dead = 0;
+    private int free = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -35,7 +37,7 @@ public class Status : MonoBehaviour
         string minutes = Mathf.Floor(currentTime / 60).ToString("00");
         string seconds = (currentTime % 60).ToString("00");
         StringBuilder sb = new StringBuilder();
-        sb.Append("TIME    ").Append(minutes).Append(":").Append(seconds);
+        sb.Append("TIME: ").Append(minutes).Append(":").Append(seconds);
 
         timeText.text = sb.ToString();
     }
@@ -56,14 +58,24 @@ public class Status : MonoBehaviour
             {
                 alive++;
             }
+
+            if (item.gameObject.GetComponent<Person>().free)
+            {
+                free++;
+            }
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.Append("ALIVE    ").Append(alive);
+        sb.Append("ALIVE: ").Append(alive);
         aliveText.text = sb.ToString();
 
         sb.Clear();
-        sb.Append("DEAD    ").Append(dead);
+        sb.Append("DEAD: ").Append(dead);
         deadText.text = sb.ToString();
+
+
+        sb.Clear();
+        sb.Append("FREE: ").Append(free);
+        freeText.text = sb.ToString();
     }
 }

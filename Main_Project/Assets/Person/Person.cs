@@ -28,11 +28,13 @@ public class Person : MonoBehaviour
     private Renderer renderer;
     private Animator animator;
     private ThirdPersonCharacter thirdPersonCharacter;
+    private Rigidbody rigidbody;
 
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        rigidbody = GetComponent<Rigidbody>();
         renderer = body.GetComponent<Renderer>();
         animator = GetComponent<Animator>();
         thirdPersonCharacter = GetComponent<ThirdPersonCharacter>();
@@ -65,6 +67,7 @@ public class Person : MonoBehaviour
             case int n when (n <= 0):
                 SetColorWhenHealthChanges(Color.red);
                 thirdPersonCharacter.m_MoveSpeedMultiplier = speeds["Stop"];
+                rigidbody.ResetInertiaTensor();
                 animator.enabled = false;
                 break;
         }

@@ -4493,7 +4493,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec52a5d8a0c2adb42a0a27081e105be5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 5
+  damage: 20
   increaseSizeTimer: 1
 --- !u!1 &1051155145
 GameObject:

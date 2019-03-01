@@ -4,7 +4,7 @@ using UnityEngine;
 public class SpawnPlayerController : MonoBehaviour
 {
   private GameObject[] positions;
-  public PlayerController player;
+  public GameObject player;
 
   // Start is called before the first frame update
   private void Start()

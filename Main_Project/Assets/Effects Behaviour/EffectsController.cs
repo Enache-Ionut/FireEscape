@@ -66,9 +66,15 @@ public class EffectsController : MonoBehaviour
     void SpawnFirstFire()
     {
         System.Random rnd = new System.Random();
-        int rndIndex = rnd.Next(0, spawnLocations.Count);
+        
+        int[] firstSpawnLocation = new int[3];
+        firstSpawnLocation[0] = 0;
+        firstSpawnLocation[1] = 1;
+        firstSpawnLocation[2] = 2;
 
-        GameObject smoke = Instantiate(effects[SMOKE], spawnLocations[rndIndex]);
+        int rndIndex = rnd.Next(0, firstSpawnLocation.Length);
+
+        GameObject smoke = Instantiate(effects[SMOKE], spawnLocations[firstSpawnLocation[rndIndex]]);
         smokes.Add(smoke);
         objectStartTime.Add(smoke, (int)Math.Round(Time.time));
 
@@ -227,7 +233,9 @@ public class EffectsController : MonoBehaviour
     {
         // Add smoke
         GameObject smoke = Instantiate(effects[SMOKE]);
+        smoke.SetActive(false);
         smoke.transform.position = nextSmokePosition.position;
+        smoke.SetActive(true);
 
         objectStartTime.Add(smoke, (int)Math.Round(Time.time));
         Vector3 poz = new Vector3(0, 0, 0);

@@ -9,11 +9,11 @@ public class SpawnPlayerController : MonoBehaviour
   // Start is called before the first frame update
   private void Start()
   {
-    //var playersLocations = GameObject.FindGameObjectsWithTag("PlayerSpawnLocation").Select(obj => obj.transform);
-    //foreach(var location in playersLocations)
-    //{
-    //  Instantiate(player, location.position, location.rotation);
-    //}
+    var playersLocations = GameObject.FindGameObjectsWithTag("PlayerSpawnLocation").Select(obj => obj.transform);
+    foreach(var location in playersLocations)
+    {
+      Instantiate(player, location.position, location.rotation);
+    }
   }
 
   // Update is called once per frame

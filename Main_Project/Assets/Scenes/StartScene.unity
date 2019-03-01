@@ -1667,7 +1667,7 @@ PrefabInstance:
     - target: {fileID: 2574426428102579738, guid: 580ab3bdf43ec6d4cb6a781b91bf7300,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 50
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 2574426427008826041, guid: 580ab3bdf43ec6d4cb6a781b91bf7300,
         type: 3}
@@ -14198,7 +14198,7 @@ GameObject:
   - component: {fileID: 1383593201}
   m_Layer: 0
   m_Name: Exits
-  m_TagString: Exit
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -45,7 +45,8 @@ public class PlayerController : MonoBehaviour
   // Update is called once per frame
   private void Update()
   {
-    agent.SetDestination(closestGameObjectTransform.localScale);
+    agent.SetDestination(closestGameObjectTransform.position);
+
 
     if (agent.remainingDistance > agent.stoppingDistance)
     {

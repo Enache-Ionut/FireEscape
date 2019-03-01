@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityStandardAssets.Characters.ThirdPerson;
@@ -13,6 +14,8 @@ public class PlayerController : MonoBehaviour
 
   private GameObject[] exits;
   private Transform closestGameObjectTransform;
+  private bool timer = false;
+  private float startTime = 0f;
 
   private void Start()
   {
@@ -21,6 +24,7 @@ public class PlayerController : MonoBehaviour
 
     Transform[] exitsTrasnforms = exits.Select(exit => exit.GetComponent<Transform>()).ToArray();
     closestGameObjectTransform = GetClosestExit(exitsTrasnforms);
+    startTime = Time.time;
 
   }
 
@@ -45,20 +49,21 @@ public class PlayerController : MonoBehaviour
   // Update is called once per frame
   private void Update()
   {
-    agent.SetDestination(closestGameObjectTransform.position);
-
-
-    if (agent.remainingDistance > agent.stoppingDistance)
+    if (Time.time - startTime > 5f)
     {
-      character.Move(agent.desiredVelocity, false, false);
-    }
-    else
-    {
-      character.Move(Vector3.zero, false, false);
-    }
+      agent.SetDestination(closestGameObjectTransform.position);
 
+
+      if (agent.remainingDistance > agent.stoppingDistance)
+      {
+        character.Move(agent.desiredVelocity, false, false);
+      }
+      else
+      {
+        character.Move(Vector3.zero, false, false);
+      }
+    }
   }
-
 
   private void DisableNaveMashObstacle(string objectTag)
   {

@@ -841,9 +841,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a29710fb557b2b4e9414b0b689b4e43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
   agent: {fileID: 6179715551396988689}
-  spawneePosition: {fileID: 0}
   character: {fileID: 808588126497094972}
 --- !u!114 &808588126497094972
 MonoBehaviour:
@@ -862,7 +860,7 @@ MonoBehaviour:
   m_JumpPower: 6
   m_GravityMultiplier: 2
   m_RunCycleLegOffset: 0.2
-  m_MoveSpeedMultiplier: 0.5
+  m_MoveSpeedMultiplier: 1
   m_AnimSpeedMultiplier: 1
   m_GroundCheckDistance: 0.2
 --- !u!54 &7349835852660426302
@@ -923,8 +921,8 @@ NavMeshAgent:
   m_GameObject: {fileID: 6179715551396988699}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.3
-  m_Speed: 0.5
+  m_Radius: 0.12
+  m_Speed: 0.2
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120

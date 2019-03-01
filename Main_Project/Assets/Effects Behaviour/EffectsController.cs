@@ -11,14 +11,15 @@ public class EffectsController : MonoBehaviour
      * transmissionMaxDist is measured in game units
      */
 
-    public int updateFireRate = 5;
-    public int updateEvolveRate = 10;
-    public int evolveTimeMin = 10;
-    public int startFireTime = 3;
+    public int updateFireRate;
+    public int updateEvolveRate;
+    public int evolveTimeMin;
+    public int transmitTimeMin;
+    public int startFireTime;
 
-    public float evolveFireChance = 0.2f;
-    public float transmissionChance = 0.1f;
-    public float transmissionMaxDist = 5f;
+    public float evolveFireChance;
+    public float transmissionChance;
+    public float transmissionMaxDist;
 
     private bool updateFireTried = false;
     private bool updateEvolveTried = false;
@@ -35,8 +36,8 @@ public class EffectsController : MonoBehaviour
     List<Transform> spawnLocations;
     List<GameObject> smokes;
     List<GameObject> fires;
-    List<Transform> ocupiedLocation;
-    Dictionary<GameObject, int> smokeStartTime;
+    List<Vector3> ocupiedLocation;
+    Dictionary<GameObject, int> objectStartTime;
 
     
     // Start is called before the first frame update
@@ -46,8 +47,8 @@ public class EffectsController : MonoBehaviour
         spawnLocations = new List<Transform>();
         smokes = new List<GameObject>();
         fires = new List<GameObject>();
-        ocupiedLocation = new List<Transform>();
-        smokeStartTime = new Dictionary<GameObject, int>();
+        ocupiedLocation = new List<Vector3>();
+        objectStartTime = new Dictionary<GameObject, int>();
 
         // Get all spawn locations
         GameObject[] spawnLocationsGameObj = GameObject.FindGameObjectsWithTag("SpawnLocation");
@@ -66,8 +67,11 @@ public class EffectsController : MonoBehaviour
 
         GameObject smoke = Instantiate(effects[SMOKE], spawnLocations[rndIndex]);
         smokes.Add(smoke);
-        smokeStartTime.Add(smoke, (int)Math.Round(Time.time));
-        ocupiedLocation.Add(smoke.transform);
+        objectStartTime.Add(smoke, (int)Math.Round(Time.time));
+
+        Vector3 poz = new Vector3(0, 0, 0);
+        poz = smoke.transform.position;
+        ocupiedLocation.Add(poz);
 
         fireStarted = true;
     }
@@ -102,7 +106,7 @@ public class EffectsController : MonoBehaviour
             updateEvolveTried = true;
             CheckRequirementsEvolve();
         }
-        else
+        if(elapsedTime % updateEvolveRate != 0)
         {
             updateEvolveTried = false;
         }
@@ -116,7 +120,7 @@ public class EffectsController : MonoBehaviour
             updateFireTried = true;
             CheckRequirementsTransmit();            
         }
-        else
+        if (elapsedTime % updateFireRate != 0)
         {
             updateFireTried = false;
         }
@@ -127,7 +131,7 @@ public class EffectsController : MonoBehaviour
         foreach (var smoke in smokes)
         {
             int smokeStart = 0;
-            if (smokeStartTime.TryGetValue(smoke, out smokeStart))
+            if (objectStartTime.TryGetValue(smoke, out smokeStart))
             {
                 var smokeAge = (int)Math.Round(Time.time) - smokeStart;
                 if (smokeAge >= evolveTimeMin)
@@ -142,19 +146,29 @@ public class EffectsController : MonoBehaviour
     {
         foreach (var fire in fires)
         {
-            List<Transform> freeLocationsInRange = new List<Transform>();
-            foreach (var location in spawnLocations)
+            int fireStart = 0;
+            if (objectStartTime.TryGetValue(fire, out fireStart))
             {
-                if (Vector3.Distance(location.transform.position, fire.transform.position) < transmissionMaxDist)
+                var fireAge = (int)Math.Round(Time.time) - fireStart;
+                if (fireAge >= transmitTimeMin)
                 {
-                    if (ocupiedLocation.Contains(location) == false)
+                    List<Transform> freeLocationsInRange = new List<Transform>();
+                    foreach (var location in spawnLocations)
                     {
-                        freeLocationsInRange.Add(location);
+                        if (Vector3.Distance(location.transform.position, fire.transform.position) < transmissionMaxDist)
+                        {
+                            if (ocupiedLocation.Contains(location.position) == false)
+                            {
+                                freeLocationsInRange.Add(location);
+                                break;
+                            }
+                        }
                     }
+
+                    TryTransmitFire(fire, freeLocationsInRange);
                 }
             }
-
-            TryTransmitFire(fire, freeLocationsInRange);
+            
         }
     }
 
@@ -189,6 +203,7 @@ public class EffectsController : MonoBehaviour
         // Add fire
         GameObject fire = Instantiate(effects[FIRE]);
         fire.transform.position = smoke.transform.position;
+        objectStartTime.Add(fire, (int)Math.Round(Time.time));
         fires.Add(fire);
 
         // Remove smoke
@@ -202,8 +217,10 @@ public class EffectsController : MonoBehaviour
         GameObject smoke = Instantiate(effects[SMOKE]);
         smoke.transform.position = nextSmokePosition.position;
 
-        smokeStartTime.Add(smoke, (int)Math.Round(Time.time));
-        ocupiedLocation.Add(smoke.transform);
+        objectStartTime.Add(smoke, (int)Math.Round(Time.time));
+        Vector3 poz = new Vector3(0, 0, 0);
+        poz = smoke.transform.position;
+        ocupiedLocation.Add(poz);
         smokes.Add(smoke);
     }
 }

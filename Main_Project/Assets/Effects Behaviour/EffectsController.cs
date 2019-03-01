@@ -67,7 +67,7 @@ public class EffectsController : MonoBehaviour
         GameObject smoke = Instantiate(effects[SMOKE], spawnLocations[rndIndex]);
         smokes.Add(smoke);
         smokeStartTime.Add(smoke, (int)Math.Round(Time.time));
-        ocupiedLocation.Add(spawnLocations[rndIndex]);
+        ocupiedLocation.Add(smoke.transform);
 
         fireStarted = true;
     }
@@ -118,7 +118,7 @@ public class EffectsController : MonoBehaviour
         }
         else
         {
-            updateFireTried = true;
+            updateFireTried = false;
         }
     }
 
@@ -179,7 +179,7 @@ public class EffectsController : MonoBehaviour
             int chance = rnd.Next(0, 100);
             if (chance < percent)
             {
-                EvolveSmokeToFire(fire);
+                TransmitFire(location);
             }
         }
     }

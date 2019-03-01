@@ -63,10 +63,12 @@ public class EffectsController : MonoBehaviour
     {
         System.Random rnd = new System.Random();
         int rndIndex = rnd.Next(0, spawnLocations.Count);
+
         GameObject smoke = Instantiate(effects[SMOKE], spawnLocations[rndIndex]);
         smokes.Add(smoke);
         smokeStartTime.Add(smoke, (int)Math.Round(Time.time));
         ocupiedLocation.Add(spawnLocations[rndIndex]);
+
         fireStarted = true;
     }
 
@@ -185,7 +187,8 @@ public class EffectsController : MonoBehaviour
     void EvolveSmokeToFire(GameObject smoke)
     {
         // Add fire
-        GameObject fire = Instantiate(effects[FIRE], smoke.transform);
+        GameObject fire = Instantiate(effects[FIRE]);
+        fire.transform.position = smoke.transform.position;
         fires.Add(fire);
 
         // Remove smoke
@@ -196,7 +199,9 @@ public class EffectsController : MonoBehaviour
     void TransmitFire(Transform nextSmokePosition)
     {
         // Add smoke
-        GameObject smoke = Instantiate(effects[SMOKE], nextSmokePosition);
+        GameObject smoke = Instantiate(effects[SMOKE]);
+        smoke.transform.position = nextSmokePosition.position;
+
         smokeStartTime.Add(smoke, (int)Math.Round(Time.time));
         ocupiedLocation.Add(smoke.transform);
         smokes.Add(smoke);

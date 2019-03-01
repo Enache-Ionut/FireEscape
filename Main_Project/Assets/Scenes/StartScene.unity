@@ -21629,6 +21629,31 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 998054947, guid: 6b6a6945b0d8e5a429ecdf0c4fe15e79,
         type: 3}
+    - target: {fileID: 8720849390046783573, guid: fc22890095203be49adf2b1afbd355df,
+        type: 3}
+      propertyPath: transmissionMaxDist
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8720849390046783573, guid: fc22890095203be49adf2b1afbd355df,
+        type: 3}
+      propertyPath: evolveFireChance
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8720849390046783573, guid: fc22890095203be49adf2b1afbd355df,
+        type: 3}
+      propertyPath: updateEvolveRate
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8720849390046783573, guid: fc22890095203be49adf2b1afbd355df,
+        type: 3}
+      propertyPath: transmissionChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8720849390046783573, guid: fc22890095203be49adf2b1afbd355df,
+        type: 3}
+      propertyPath: evolveTimeMin
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc22890095203be49adf2b1afbd355df, type: 3}
 --- !u!1 &9133789588544426939 stripped

@@ -12768,6 +12768,36 @@ Transform:
   m_Father: {fileID: 1645886334}
   m_RootOrder: 46
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1462280570
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1462280571}
+  m_Layer: 0
+  m_Name: SpawLocation (150)
+  m_TagString: SpawnLocation
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1462280571
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462280570}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -65.1, y: 0, z: -0.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1645886334}
+  m_RootOrder: 76
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1465433964
 GameObject:
   m_ObjectHideFlags: 0
@@ -14490,6 +14520,7 @@ Transform:
   - {fileID: 2020191805}
   - {fileID: 7049047}
   - {fileID: 670759987}
+  - {fileID: 1462280571}
   m_Father: {fileID: 418788799}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -19214,7 +19245,7 @@ PrefabInstance:
     - target: {fileID: 8720849390046783573, guid: fc22890095203be49adf2b1afbd355df,
         type: 3}
       propertyPath: transmissionMaxDist
-      value: 15
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 8720849390046783573, guid: fc22890095203be49adf2b1afbd355df,
         type: 3}
@@ -19224,22 +19255,37 @@ PrefabInstance:
     - target: {fileID: 8720849390046783573, guid: fc22890095203be49adf2b1afbd355df,
         type: 3}
       propertyPath: updateEvolveRate
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8720849390046783573, guid: fc22890095203be49adf2b1afbd355df,
         type: 3}
       propertyPath: transmissionChance
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8720849390046783573, guid: fc22890095203be49adf2b1afbd355df,
         type: 3}
       propertyPath: evolveTimeMin
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8720849390046783573, guid: fc22890095203be49adf2b1afbd355df,
         type: 3}
       propertyPath: transmitTimeMin
-      value: 5
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8720849390046783573, guid: fc22890095203be49adf2b1afbd355df,
+        type: 3}
+      propertyPath: startFireTime
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8720849390046783573, guid: fc22890095203be49adf2b1afbd355df,
+        type: 3}
+      propertyPath: updateFireRate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8720849390046783573, guid: fc22890095203be49adf2b1afbd355df,
+        type: 3}
+      propertyPath: maxFiresOnUpdateRound
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc22890095203be49adf2b1afbd355df, type: 3}

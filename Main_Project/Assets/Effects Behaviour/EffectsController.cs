@@ -58,6 +58,9 @@ public class EffectsController : MonoBehaviour
         }
 
         startTime = Time.time;
+
+        updateFireRate = Math.Max(2, updateFireRate);
+        updateEvolveRate = Math.Max(2, updateEvolveRate);
     }
 
     void SpawnFirstFire()
@@ -100,13 +103,13 @@ public class EffectsController : MonoBehaviour
         /*
         * updateEvolveTried is used to ensure that only 
         * once a second evolve is tried
-        */ 
-        if(elapsedTime % updateEvolveRate == 0 && updateEvolveTried == false)
+        */
+        if (elapsedTime % updateEvolveRate == 0 && updateEvolveTried == false)
         {
             updateEvolveTried = true;
             CheckRequirementsEvolve();
         }
-        if(elapsedTime % updateEvolveRate != 0)
+        if (elapsedTime % updateEvolveRate != 0)
         {
             updateEvolveTried = false;
         }
@@ -118,16 +121,18 @@ public class EffectsController : MonoBehaviour
         if (elapsedTime % updateFireRate == 0 && updateFireTried == false)
         {
             updateFireTried = true;
-            CheckRequirementsTransmit();            
+            CheckRequirementsTransmit();
         }
         if (elapsedTime % updateFireRate != 0)
         {
             updateFireTried = false;
         }
+       
     }
 
     void CheckRequirementsEvolve()
     {
+        List<GameObject> availableSmokes = new List<GameObject>();
         foreach (var smoke in smokes)
         {
             int smokeStart = 0;
@@ -136,10 +141,12 @@ public class EffectsController : MonoBehaviour
                 var smokeAge = (int)Math.Round(Time.time) - smokeStart;
                 if (smokeAge >= evolveTimeMin)
                 {
-                    TryEvolveSmoke(smoke);
+                    availableSmokes.Add(smoke);
                 }
             }
         }
+
+        TryEvolveSmoke(availableSmokes);
     }
 
     void CheckRequirementsTransmit()
@@ -172,16 +179,21 @@ public class EffectsController : MonoBehaviour
         }
     }
 
-    void TryEvolveSmoke(GameObject smoke)
+    void TryEvolveSmoke(List<GameObject> smokesToEvolve)
     {
         int percent = (int)Math.Round(evolveFireChance * 100);
         System.Random rnd = new System.Random();
-        int chance = rnd.Next(0, 100);
 
-        if (chance < percent)
+        for(int i = smokesToEvolve.Count-1; i >= 0; i--)
         {
-            EvolveSmokeToFire(smoke);
+            var smoke = smokesToEvolve[i];
+            int chance = rnd.Next(0, 100);
+            if (chance < percent)
+            {
+                EvolveSmokeToFire(smoke);
+            }
         }
+        
     }
 
     void TryTransmitFire(GameObject fire, List<Transform> locationsInRange)

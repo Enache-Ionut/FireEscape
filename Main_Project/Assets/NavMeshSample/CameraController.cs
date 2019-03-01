@@ -7,8 +7,15 @@ public class CameraController : MonoBehaviour
 
     private Camera currentPlayerCamera;
 
-    // Update is called once per frame
-    private void Update()
+
+  private void Start()
+  {
+    currentPlayerCamera = cameras[0];
+  }
+
+
+  // Update is called once per frame
+  private void Update()
     {
         if (Input.GetKeyDown(KeyCode.C))
         {
